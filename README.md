@@ -1,10 +1,4 @@
 # 🏨 Pensou em Hotel? Vai de Bivago!
-
-<p align="center">
-  <img src="https://img.shields.io/static/v1?label=status&message=IDEALIZAÇÃO&color=orange&style=for-the-badge" alt="Status"/>
-  <img src="https://img.shields.io/static/v1?label=license&message=MIT&color=green&style=for-the-badge" alt="License"/>
-</p>
-
 ---
 
 ## 💻 Sobre o projeto
