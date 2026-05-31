@@ -26,6 +26,7 @@
                 <div class="grupo-formulario">
                     <label for="tipo-quarto">Tipo de Quarto:</label>
                     <select id="tipo-quarto" required>
+                        <option value="" disabled selected>Selecione um tipo...</option>
                         <option value="standard">Standard</option>
                         <option value="deluxe">Deluxe</option>
                         <option value="suite">Suíte Master</option>
@@ -37,6 +38,25 @@
 
         <section id="resultados-quartos" class="container-quartos">
             </section>
+
+        <section id="secao-checkout" class="container-pesquisa" style="display: none; margin-top: 40px;">
+            <h2>Finalizar Reserva</h2>
+            <div id="detalhes-reserva-checkout" style="background-color: #e3f2fd; padding: 15px; border-radius: 6px; margin-bottom: 20px; color: #003580;">
+            </div>
+
+            <form id="formulario-checkout">
+                <div class="grupo-formulario">
+                    <label for="nome-hospede">Nome Completo do Hóspede:</label>
+                    <input type="text" id="nome-hospede" required placeholder="Ex: Matheus Dias">
+                </div>
+                <div class="grupo-formulario">
+                    <label for="numero-cartao">Número do Cartão de Crédito:</label>
+                    <input type="text" id="numero-cartao" required placeholder="0000 0000 0000 0000" maxlength="19">
+                </div>
+                <button type="submit" class="botao-buscar" style="background-color: #ffb703; color: #003580;">Confirmar Reserva</button>
+                <button type="button" id="botao-voltar" style="background-color: #ccc; color: #333; margin-top: 10px; width: 100%; border: none; padding: 10px; border-radius: 4px; cursor: pointer;">Voltar para a Busca</button>
+            </form>
+        </section>
     </main>
 
     <script src="app.js"></script>
