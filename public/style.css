@@ -1,0 +1,116 @@
+:root {
+    --azul-primario: #003580;
+    --azul-secundario: #0071c2;
+    --laranja-destaque: #febb02;
+    --cinza-claro: #f5f5f5;
+    --texto-escuro: #333;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background-color: var(--cinza-claro);
+    color: var(--texto-escuro);
+}
+
+header {
+    background-color: var(--azul-primario);
+    color: white;
+    padding: 1rem 2rem;
+    text-align: center;
+}
+
+.conteiner-pesquisa {
+    background: white;
+    margin: 20px auto;
+    padding: 20px;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+#formulario-pesquisa {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.grupo-formulario {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 150px;
+}
+
+input, select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.botao-buscar {
+    background-color: var(--azul-secundario);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.botao-buscar:hover {
+    background-color: var(--azul-primario);
+}
+
+/* Grade de Resultados dos Quartos */
+.container-quartos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.cartao-quarto {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.cartao-quarto:hover {
+    transform: translateY(-5px);
+}
+
+.cartao-quarto img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.info-quarto {
+    padding: 15px;
+}
+
+.preco-quarto {
+    font-size: 1.2rem;
+    color: var(--azul-primario);
+    font-weight: bold;
+}
+
+.botao-reserva {
+    width: 100%;
+    background-color: var(--laranja-destaque);
+    color: var(--azul-primario);
+    border: none;
+    padding: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+}

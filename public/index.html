@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bivago - Reservas de Hotel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>BIVAGO</h1>
+    </header>
+
+    <main>
+        <section class="container-pesquisa">
+            <h2>Encontre o quarto perfeito</h2>
+            <form id="formulario-pesquisa">
+                <div class="grupo-formulario">
+                    <label for="checkin">Check-in:</label>
+                    <input type="date" id="checkin" required>
+                </div>
+                <div class="grupo-formulario">
+                    <label for="checkout">Check-out:</label>
+                    <input type="date" id="checkout" required>
+                </div>
+                <div class="grupo-formulario">
+                    <label for="tipo-quarto">Tipo de Quarto:</label>
+                    <select id="tipo-quarto" required>
+                        <option value="standard">Standard</option>
+                        <option value="deluxe">Deluxe</option>
+                        <option value="suite">Suíte Master</option>
+                    </select>
+                </div>
+                <button type="submit" class="botao-buscar">Pesquisar</button>
+            </form>
+        </section>
+
+        <section id="resultados-quartos" class="container-quartos">
+            </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
