@@ -17,10 +17,36 @@ header {
     background-color: var(--azul-primario);
     color: white;
     padding: 1rem 2rem;
-    text-align: center;
 }
 
-/* Corrigido de .conteiner-pesquisa para .container-pesquisa */
+.header-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-container h1 {
+    margin: 0;
+}
+
+.botao-nav {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.botao-nav:hover {
+    background-color: white;
+    color: var(--azul-primario);
+}
+
 .container-pesquisa {
     background: white;
     margin: 20px auto;
@@ -51,6 +77,12 @@ input, select {
     margin-top: 5px;
 }
 
+.grupo-botoes-busca {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
 .botao-buscar {
     background-color: var(--azul-secundario);
     color: white;
@@ -60,66 +92,44 @@ input, select {
     cursor: pointer;
     font-weight: bold;
     transition: background 0.3s;
+    height: 100%;
 }
 
 .botao-buscar:hover {
     background-color: var(--azul-primario);
 }
 
-/* Grade de Resultados dos Quartos */
-.container-quartos {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-    max-width: 1000px;
-    margin: 30px auto;
-    padding: 0 20px;
-}
-
-.cartao-quarto {
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transition: transform 0.2s;
-}
-
-.cartao-quarto:hover {
-    transform: translateY(-5px);
-}
-
-.cartao-quarto img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.info-quarto {
-    padding: 15px;
-}
-
-.preco-quarto {
-    font-size: 1.2rem;
-    color: var(--azul-primario);
-    font-weight: bold;
-}
-
-.botao-reserva {
-    width: 100%;
-    background-color: var(--laranja-destaque);
-    color: var(--azul-primario);
+.botao-limpar {
+    background-color: #e0e0e0;
+    color: #333;
     border: none;
-    padding: 12px;
+    padding: 12px 20px;
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
-    margin-top: 10px;
+    transition: background-color 0.2s;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.botao-limpar:hover {
+    background-color: #ccc;
+}
+
+.resumo-preco {
+    background-color: #eaf4fc;
+    color: #003580;
+    padding: 14px 18px;
+    border-radius: 6px;
+    margin-top: 20px;
+    font-size: 0.95em;
+    border-left: 4px solid #febb02;
+    animation: deslizarCima 0.3s ease-out;
 }
 
 /* ========================================= */
-/* RECOMENDAÇÕES                             */
+/* GRID E CARDS DE RECOMENDAÇÃO E PESQUISA   */
 /* ========================================= */
-
 .container-recomendacoes {
     max-width: 1000px;
     margin: 40px auto;
@@ -138,22 +148,35 @@ input, select {
     gap: 25px;
 }
 
-.card-recomendacao {
+#resultados-quartos {
+    max-width: 1000px; 
+    margin: 20px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 25px;
+}
+
+.card-recomendacao, .cartao-quarto {
+    background-color: #fff;
+    border: 1px solid #eaeaea;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     display: flex;
     flex-direction: column;
-    cursor: pointer;
     transition: transform 0.2s ease;
 }
 
-.card-recomendacao:hover {
+.card-recomendacao:hover, .cartao-quarto:hover {
     transform: translateY(-5px);
 }
 
-.card-recomendacao img {
+.card-recomendacao img, .cartao-quarto img {
     width: 100%;
     height: 220px;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: 8px;
     margin-bottom: 12px;
 }
 
@@ -165,67 +188,24 @@ input, select {
     margin-bottom: 6px;
 }
 
-.titulo-quarto {
+.titulo-quarto, .info-quarto h3 {
     font-size: 1.05em;
     color: #222;
     margin: 0 0 6px 0;
     font-weight: 600;
 }
 
-.preco-recomendacao {
+.preco-recomendacao, .preco-quarto {
     font-size: 0.95em;
     color: #444;
     margin: 0;
-}
-
-
-/* ========================================= */
-/* ESTILOS DOS RESULTADOS DA PESQUISA        */
-/* ========================================= */
-
-#resultados-quartos {
-    max-width: 1000px; 
-    margin: 20px auto;
-    padding: 0 20px;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 25px;
-}
-
-.cartao-quarto {
-    background-color: #fff;
-    border: 1px solid #eaeaea;
-    border-radius: 12px;
-    padding: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
-}
-
-.cartao-quarto img {
-    width: 100%;
-    height: 220px; 
-    object-fit: cover; 
-    border-radius: 8px;
-    margin-bottom: 15px;
-}
-
-.info-quarto h3 {
-    margin-top: 0;
-    color: #222;
+    font-weight: bold;
 }
 
 .info-quarto p {
     color: #555;
     font-size: 0.95em;
     flex-grow: 1; 
-}
-
-.preco-quarto {
-    font-size: 1.1em !important;
-    font-weight: bold;
-    color: #003580 !important;
-    margin-bottom: 15px !important;
 }
 
 .botao-reserva {
@@ -238,20 +218,19 @@ input, select {
     cursor: pointer;
     width: 100%;
     transition: background-color 0.2s;
+    margin-top: 15px;
 }
 
 .botao-reserva:hover {
     background-color: #fb8500;
 }
 
-
 /* ========================================= */
-/* ESTILOS DA TELA DE CHECKOUT (COMPACTO)    */
+/* TELA DE CHECKOUT (COMPACTO)               */
 /* ========================================= */
-
 .checkout-centralizado {
     width: 100%;
-    max-width: 380px !important; /* Card estreito e elegante */
+    max-width: 380px !important;
     margin: 20px auto !important;
     padding: 20px !important;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
@@ -283,13 +262,16 @@ input, select {
     margin-bottom: 4px;
 }
 
-#detalhes-reserva-checkout p {
-    margin: 2px 0;
+#detalhes-reserva-checkout p { margin: 2px 0; }
+
+.linha-datas {
+    display: flex;
+    gap: 10px;
 }
 
-#formulario-checkout .grupo-formulario {
-    margin-bottom: 10px;
-}
+.linha-datas .grupo-formulario { flex: 1; }
+
+#formulario-checkout .grupo-formulario { margin-bottom: 10px; }
 
 #formulario-checkout label {
     font-size: 0.85em;
@@ -304,7 +286,7 @@ input, select {
     border: 1px solid #ccc;
     font-size: 0.9em;
     width: 100%;
-    box-sizing: border-box; /* Garante que o input não passe da borda */
+    box-sizing: border-box;
 }
 
 #formulario-checkout input:focus {
@@ -326,9 +308,7 @@ input, select {
     transition: background-color 0.2s;
 }
 
-.botao-confirmar:hover {
-    background-color: #218838;
-}
+.botao-confirmar:hover { background-color: #218838; }
 
 .botao-secundario {
     background-color: transparent;
@@ -347,4 +327,120 @@ input, select {
 .botao-secundario:hover {
     background-color: #f1f1f1;
     color: #333;
+}
+
+/* ========================================= */
+/* MODAL DE SUCESSO                          */
+/* ========================================= */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-conteudo {
+    background: white;
+    padding: 35px 40px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: deslizarCima 0.4s ease-out;
+}
+
+@keyframes deslizarCima {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.icone-sucesso {
+    font-size: 55px;
+    color: #28a745;
+    margin-bottom: 15px;
+}
+
+.modal-conteudo h2 {
+    color: #003580;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.6em;
+}
+
+.modal-conteudo p {
+    color: #555;
+    margin-bottom: 25px;
+    line-height: 1.5;
+    font-size: 1.05em;
+}
+
+.botao-sucesso {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 14px 30px;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.botao-sucesso:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+/* ========================================= */
+/* CARTÕES DE RESERVA FEITA                  */
+/* ========================================= */
+.cartao-reserva-feita {
+    background: white;
+    border: 1px solid #eaeaea;
+    border-left: 5px solid #28a745;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.info-reserva h3 {
+    margin: 0 0 5px 0;
+    color: #003580;
+}
+
+.info-reserva p {
+    margin: 3px 0;
+    color: #555;
+    font-size: 0.9em;
+}
+
+.status-badge {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.mensagem-vazia {
+    text-align: center;
+    color: #777;
+    padding: 40px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px dashed #ccc;
 }

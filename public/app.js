@@ -1,237 +1,276 @@
+// ==========================================
+// 1. DADOS E VARIÁVEIS DE ESTADO
+// ==========================================
+const quartos = [
+    {
+        id: 1,
+        nome: 'Quarto Standard Charmoso',
+        tipo: 'standard',
+        descricao: 'Ar condicionado, Wi-Fi e TV a cabo. Perfeito para uma estadia prática e confortável.',
+        preco: 180,
+        imagem: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    },
+    {
+        id: 2,
+        nome: 'Quarto Deluxe King Size',
+        tipo: 'deluxe',
+        descricao: 'Cama King Size, frigobar, varanda e decoração premium para máximo conforto.',
+        preco: 350,
+        imagem: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    },
+    {
+        id: 3,
+        nome: 'Suite Luxo com Varanda',
+        tipo: 'suite',
+        descricao: 'Hidromassagem, sala de estar, vista panorâmica e serviço de quarto 24h.',
+        preco: 600,
+        imagem: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    }
+];
 
-const formularioPesquisa = document.getElementById('formulario-pesquisa');
-const resultadosQuartos = document.getElementById('resultados-quartos');
-const secaoCheckout = document.getElementById('secao-checkout');
-const detalhesReservaCheckout = document.getElementById('detalhes-reserva-checkout');
-const botaoVoltar = document.getElementById('botao-voltar');
-const campoCheckin = document.getElementById('checkin');
-const campoCheckout = document.getElementById('checkout');
-const campoTipoQuarto = document.getElementById('tipo-quarto');
-const containerPesquisa = document.querySelector('.container-pesquisa');
-const campoCartao = document.getElementById('numero-cartao');
-const formularioCheckout = document.getElementById('formulario-checkout');
-const secaoRecomendacoes = document.getElementById('recomendacoes'); // Captura a nova seção de recomendações
-
-// Cria o container para exibir o resumo ou o erro
-const divResumoPreco = document.createElement('div');
-divResumoPreco.id = 'resumo-diarias';
-divResumoPreco.style.marginTop = '20px';
-divResumoPreco.style.padding = '12px';
-divResumoPreco.style.borderRadius = '6px';
-divResumoPreco.style.fontWeight = 'bold';
-divResumoPreco.style.display = 'none'; // Começa escondido
-
-// Adiciona o elemento dentro da seção correta
-if (containerPesquisa) {
-    containerPesquisa.appendChild(divResumoPreco);
-}
-
-// Tabela de preços por tipo
-const tabelaPrecos = {
-    standard: 180,
-    deluxe: 350,
-    suite: 600
-};
-
-// Guardar na memória o quarto que está sendo reservado atualmente
 let quartoSelecionadoAtual = null;
+let historicoReservas = [];
 
+// ==========================================
+// 2. MAPEAMENTO DOS ELEMENTOS DO DOM
+// ==========================================
+const formularioPesquisa = document.getElementById('formulario-pesquisa');
+const secaoBusca = document.getElementById('secao-busca'); 
+const resultadosQuartos = document.getElementById('resultados-quartos');
+const secaoRecomendacoes = document.getElementById('recomendacoes');
+const secaoCheckout = document.getElementById('secao-checkout');
+const detalhesCheckout = document.getElementById('detalhes-reserva-checkout');
+const botaoLimparBusca = document.getElementById('botao-limpar-busca');
+const botaoVoltar = document.getElementById('botao-voltar');
+const resumoPreco = document.getElementById('resumo-preco');
 
+const modalSucesso = document.getElementById('modal-sucesso');
+const mensagemSucesso = document.getElementById('mensagem-sucesso');
+const botaoFecharModal = document.getElementById('botao-fechar-modal');
 
-// FUNCIONALIDADE 1 - Busca de disponibilidade
+const secaoMinhasReservas = document.getElementById('secao-minhas-reservas');
+const listaReservas = document.getElementById('lista-reservas');
+const btnMinhasReservas = document.getElementById('btn-minhas-reservas');
+const btnVoltarHome = document.getElementById('botao-voltar-home');
 
-
-formularioPesquisa.addEventListener('submit', async (event) => {
-    event.preventDefault(); // nao deixa a pagina recarregar
-
-    // ESCONDE AS RECOMENDAÇÕES ASSIM QUE O USUÁRIO PESQUISAR
-    if (secaoRecomendacoes) {
-        secaoRecomendacoes.style.display = 'none';
-    }
-
-    const checkin = campoCheckin.value;
-    const checkout = campoCheckout.value;
-    const tipo = campoTipoQuarto.value;
-
-    // TRAVA DE SEGURANÇA: Impede a busca no Back-end se as datas forem inválidas
-    const dataInicio = new Date(checkin + 'T00:00:00');
-    const dataFim = new Date(checkout + 'T00:00:00');
-
-    if (!isNaN(dataInicio) && !isNaN(dataFim)) {
-        if (dataFim <= dataInicio) {
-            resultadosQuartos.innerHTML = ''; // Limpa os cards de quartos se houver erro
-            divResumoPreco.style.display = 'block';
-            divResumoPreco.style.backgroundColor = '#ffebee';
-            divResumoPreco.style.color = '#c62828';
-            divResumoPreco.innerHTML = '⚠️ Erro: A data de check-out deve ser maior que a data de check-in!';
-            return; // Para a execução aqui e não faz o fetch
-        }
-    }
-
-    try {
-        const response = await fetch(`http://localhost:3001/api/quartos/buscar?checkin=${checkin}&checkout=${checkout}&tipo=${tipo}`);
-        const data = await response.json();
+// ==========================================
+// 3. PESQUISAR QUARTOS
+// ==========================================
+if (formularioPesquisa) {
+    formularioPesquisa.addEventListener('submit', function(event) {
+        event.preventDefault(); 
+        
+        const tipoSelecionado = document.getElementById('tipo-quarto').value;
+        const quartosFiltrados = quartos.filter(quarto => quarto.tipo === tipoSelecionado);
 
         resultadosQuartos.innerHTML = '';
 
-        if (data.quartos.length === 0) {
-            resultadosQuartos.innerHTML = '<p>Nenhum quarto disponível para esse tipo nesta data.</p>';
-            divResumoPreco.style.display = 'none'; // Esconde o resumo se não achar quartos
-            return;
+        if (quartosFiltrados.length === 0) {
+            resultadosQuartos.innerHTML = '<p style="grid-column: 1 / -1; text-align: center;">Nenhum quarto encontrado para este tipo.</p>';
+        } else {
+            quartosFiltrados.forEach(quarto => {
+                const card = document.createElement('div');
+                card.className = 'cartao-quarto';
+                card.innerHTML = `
+                    <img src="${quarto.imagem}" alt="${quarto.nome}">
+                    <div class="info-quarto">
+                        <h3>${quarto.nome}</h3>
+                        <p>${quarto.descricao}</p>
+                        <p class="preco-quarto">R$ ${quarto.preco}/noite</p>
+                        <button class="botao-reserva" onclick="selecionarQuarto(${quarto.id}, '${quarto.nome}', ${quarto.preco})">Selecionar Quarto</button>
+                    </div>
+                `;
+                resultadosQuartos.appendChild(card);
+            });
         }
 
-        // render os quartos
-        data.quartos.forEach(quarto => {
-            const card = document.createElement('div');
-            card.className = 'cartao-quarto';
-            card.innerHTML = `
-                <img src="${quarto.imagem}" alt="${quarto.nome}">
-                <div class="info-quarto">
-                    <h3>${quarto.nome}</h3>
-                    <p>${quarto.descricao}</p>
-                    <p class="preco-quarto">R$ ${quarto.preco}/noite</p>
-                    <button class="botao-reserva" onclick="selecionarQuarto(${quarto.id}, '${quarto.nome}', ${quarto.preco})">Selecionar Quarto</button>
-                </div>
-            `;
-            resultadosQuartos.appendChild(card);
-        });
+        // Cálculo de datas e preços
+        const checkinVal = document.getElementById('checkin').value;
+        const checkoutVal = document.getElementById('checkout').value;
 
-        // Só executa o cálculo estimado se a busca trouxer quartos com sucesso
-        calcularDiariasETotal();
+        if (checkinVal && checkoutVal && quartosFiltrados.length > 0) {
+            const data1 = new Date(checkinVal);
+            const data2 = new Date(checkoutVal);
+            const diferencaTempo = Math.abs(data2 - data1);
+            const diarias = Math.ceil(diferencaTempo / (1000 * 60 * 60 * 24));
 
-    } catch (error) {
-        console.error('Erro ao buscar quartos:', error);
-        resultadosQuartos.innerHTML = '<p>Erro ao conectar com o servidor. Tente novamente.</p>';
-        divResumoPreco.style.display = 'none';
-    }
-});
-
-
-
-// FUNCIONALIDADE 2 - calculo do valor real do quarto
-
-
-function calcularDiariasETotal() {
-    // Se alguma das datas estiver vazia, esconde o bloco e para a execução
-    if (!campoCheckin.value || !campoCheckout.value) {
-        divResumoPreco.style.display = 'none';
-        return;
-    }
-
-    // Adicionado 'T00:00:00' para garantir que a data seja interpretada no fuso horário local
-    const dataInicio = new Date(campoCheckin.value + 'T00:00:00');
-    const dataFim = new Date(campoCheckout.value + 'T00:00:00');
-    const tipoSelecionado = campoTipoQuarto.value;
-
-    // Garante que os objetos de data são válidos antes de calcular
-    if (!isNaN(dataInicio) && !isNaN(dataFim)) {
-        
-        // Validacao: Check-out menor ou igual ao Check-in
-        if (dataFim <= dataInicio) {
-            resultadosQuartos.innerHTML = ''; // Limpa os quartos da tela na hora que o erro acontecer
-            divResumoPreco.style.display = 'block';
-            divResumoPreco.style.backgroundColor = '#ffebee';
-            divResumoPreco.style.color = '#c62828';
-            divResumoPreco.innerHTML = '⚠️ Erro: A data de check-out deve ser maior que a data de check-in!';
-            return;
+            if (diarias > 0) {
+                const preco = quartosFiltrados[0].preco;
+                const total = preco * diarias;
+                if (resumoPreco) {
+                    resumoPreco.innerHTML = `✨ <strong>Período Selecionado:</strong> ${diarias} diária(s) &nbsp;|&nbsp; <strong>Valor por noite:</strong> R$ ${preco} &nbsp;|&nbsp; <strong>Total Estimado: R$ ${total}</strong>`;
+                    resumoPreco.style.display = 'block';
+                }
+            }
         }
 
-        // calcula a diferença em dias
-        const diferencaTempo = Math.abs(dataFim - dataInicio);
-        const quantidadeDiarias = Math.ceil(diferencaTempo / (1000 * 60 * 60 * 24));
-
-        // obtem o preco e calcula o total
-        const precoPorNoite = tabelaPrecos[tipoSelecionado] || 0;
-        const valorTotal = quantidadeDiarias * precoPorNoite;
-
-        // resumo estilizado
-        divResumoPreco.style.opacity = '1'; 
-        divResumoPreco.style.display = 'block';
-        divResumoPreco.style.backgroundColor = '#e3f2fd';
-        divResumoPreco.style.color = '#003580';
-        divResumoPreco.innerHTML = `✨ Período Selecionado: ${quantidadeDiarias} diária(s) | Valor por noite: R$ ${precoPorNoite} | Total Estimado: R$ ${valorTotal}`;
-    }
+        // Troca de Telas
+        if (botaoLimparBusca) botaoLimparBusca.style.display = 'block';
+        if (secaoRecomendacoes) secaoRecomendacoes.style.display = 'none';
+        if (secaoMinhasReservas) secaoMinhasReservas.style.display = 'none';
+        resultadosQuartos.style.display = 'grid'; 
+    });
 }
 
+// ==========================================
+// 4. LIMPAR BUSCA
+// ==========================================
+if (botaoLimparBusca) {
+    botaoLimparBusca.addEventListener('click', () => {
+        if (formularioPesquisa) formularioPesquisa.reset(); 
+        if (resultadosQuartos) {
+            resultadosQuartos.innerHTML = ''; 
+            resultadosQuartos.style.display = 'none';
+        }
+        if (resumoPreco) resumoPreco.style.display = 'none';
+        if (secaoRecomendacoes) secaoRecomendacoes.style.display = 'block'; 
+        botaoLimparBusca.style.display = 'none'; 
+    });
+}
 
-
-// FUNCIONALIDADE 3 - Fluxo de Transição para o Checkout
-
-
+// ==========================================
+// 5. SELECIONAR QUARTO (IR PARA CHECKOUT)
+// ==========================================
 function selecionarQuarto(id, nome, preco) {
-    // Guarda as informações na memória
     quartoSelecionadoAtual = { id, nome, preco };
 
-    // Esconde a busca e os resultados usando manipulação do DOM
-    containerPesquisa.style.display = 'none';
-    resultadosQuartos.style.display = 'none';
+    // Esconde as telas anteriores
+    if (secaoBusca) secaoBusca.style.display = 'none';
+    if (resultadosQuartos) resultadosQuartos.style.display = 'none';
+    if (secaoRecomendacoes) secaoRecomendacoes.style.display = 'none';
+    if (secaoMinhasReservas) secaoMinhasReservas.style.display = 'none';
 
-    // Exibe a tela de checkout
-    secaoCheckout.style.display = 'block';
+    // Mostra o checkout
+    if (secaoCheckout) secaoCheckout.style.display = 'block';
 
-    // Preenche o resumo da reserva com os dados dinâmicos do quarto
-    detalhesReservaCheckout.innerHTML = `
-        <h3>📍 Resumo da sua Escolha:</h3>
-        <p><strong>Acomodação:</strong> ${nome}</p>
-        <p><strong>Valor unitário:</strong> R$ ${preco}/noite</p>
-        <p style="font-size: 0.9em; color: #555;">Por favor, preencha seus dados abaixo para confirmar a reserva.</p>
-    `;
+    // Injeta os dados da reserva
+    if (detalhesCheckout) {
+        detalhesCheckout.innerHTML = `
+            <h3>📍 Resumo da sua Escolha:</h3>
+            <p><strong>Acomodação:</strong> ${nome}</p>
+            <p><strong>Valor unitário:</strong> R$ ${preco}/noite</p>
+            <p style="font-size: 0.9em; color: #555;">Por favor, preencha seus dados abaixo para confirmar a reserva.</p>
+        `;
+    }
+
+    // Autopreenchimento de datas
+    const checkinPesquisa = document.getElementById('checkin');
+    const checkoutPesquisa = document.getElementById('checkout');
+    const inputCheckoutCheckin = document.getElementById('checkout-checkin');
+    const inputCheckoutCheckout = document.getElementById('checkout-checkout');
+
+    if (checkinPesquisa && inputCheckoutCheckin) {
+        inputCheckoutCheckin.value = checkinPesquisa.value || '';
+    }
+    if (checkoutPesquisa && inputCheckoutCheckout) {
+        inputCheckoutCheckout.value = checkoutPesquisa.value || '';
+    }
 }
 
-// Botão para voltar do checkout para a tela de busca inicial
+// ==========================================
+// 6. VOLTAR DO CHECKOUT
+// ==========================================
 if (botaoVoltar) {
     botaoVoltar.addEventListener('click', () => {
-        secaoCheckout.style.display = 'none';
-        containerPesquisa.style.display = 'block';
-        resultadosQuartos.style.display = 'grid'; // Volta para o layout original
-    });
-}
+        if (secaoCheckout) secaoCheckout.style.display = 'none';
+        if (secaoBusca) secaoBusca.style.display = 'block';
 
-
-
-// FUNCIONALIDADE 4 - Máscara Dinâmica de Cartão e Validação
-
-
-if (campoCartao) {
-    // Aplica máscara automática adicionando espaço a cada 4 números digitados
-    campoCartao.addEventListener('input', (event) => {
-        let valor = event.target.value;
-        
-        // Remove tudo o que não for número usando expressão regular (Regex)
-        valor = valor.replace(/\D/g, '');
-        
-        // Adiciona o espaçamento padrão de cartões de crédito
-        valor = valor.replace(/(\d{4})(\d)/, '$1 $2');
-        valor = valor.replace(/(\d{4}) (\d{4})(\d)/, '$1 $2 $3');
-        valor = valor.replace(/(\d{4}) (\d{4}) (\d{4})(\d)/, '$1 $2 $3 $4');
-        
-        event.target.value = valor;
-    });
-}
-
-if (formularioCheckout) {
-    // Manipula o envio do checkout final
-    formularioCheckout.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const nomeHospede = document.getElementById('nome-hospede').value;
-        const numeroCartao = campoCartao.value;
-
-        // Regra de validação: O cartão formatado precisa ter exatamente 16 números (19 caracteres com espaços)
-        if (numeroCartao.length < 19) {
-            alert('⚠️ Por favor, digite um número de cartão de crédito válido com 16 dígitos.');
-            return;
+        if (resultadosQuartos && resultadosQuartos.innerHTML.trim() !== '') {
+            resultadosQuartos.style.display = 'grid';
+        } else {
+            if (secaoRecomendacoes) secaoRecomendacoes.style.display = 'block';
         }
+    });
+}
 
-        // Sucesso total no fluxo de Front-end!
-        alert(`🎉 Sucesso, ${nomeHospede}!\nSua reserva para o "${quartoSelecionadoAtual.nome}" foi pré-confirmada com sucesso!\nObrigado por escolher o Bivago.`);
+// ==========================================
+// 7. CONFIRMAR RESERVA E ABRIR MODAL
+// ==========================================
+const formCheckout = document.getElementById('formulario-checkout');
+
+if (formCheckout) {
+    formCheckout.addEventListener('submit', (e) => {
+        e.preventDefault(); 
         
-        // Reseta a página e volta para a busca inicial
-        formularioCheckout.reset();
-        divResumoPreco.style.display = 'none'; // Esconde a faixa azul após fechar a reserva
-        botaoVoltar.click();
+        const dataIn = document.getElementById('checkout-checkin').value;
+        const dataOut = document.getElementById('checkout-checkout').value;
+        const hospede = document.getElementById('nome-hospede').value;
+
+        historicoReservas.push({
+            quarto: quartoSelecionadoAtual.nome,
+            preco: quartoSelecionadoAtual.preco,
+            hospede: hospede,
+            checkin: dataIn,
+            checkout: dataOut,
+            status: 'Confirmada ✔️'
+        });
+
+        if (mensagemSucesso && modalSucesso) {
+            mensagemSucesso.innerHTML = `A sua reserva para o <strong>${quartoSelecionadoAtual?.nome}</strong> foi realizada com sucesso!<br><br><span style="font-size: 0.85em; color: #888;">(Este é um sistema simulado)</span>`;
+            modalSucesso.style.display = 'flex'; 
+        }
+    });
+}
+
+// Fechar o Modal
+if (botaoFecharModal) {
+    botaoFecharModal.addEventListener('click', () => {
+        if (modalSucesso) modalSucesso.style.display = 'none';
+        if (formCheckout) formCheckout.reset();
         
+        if (botaoVoltar) botaoVoltar.click();
+        if (botaoLimparBusca) botaoLimparBusca.click();
+    });
+}
+
+// ==========================================
+// 8. PAINEL MINHAS RESERVAS
+// ==========================================
+function renderizarReservas() {
+    if (secaoBusca) secaoBusca.style.display = 'none';
+    if (resultadosQuartos) resultadosQuartos.style.display = 'none';
+    if (secaoRecomendacoes) secaoRecomendacoes.style.display = 'none';
+    if (secaoCheckout) secaoCheckout.style.display = 'none';
+
+    listaReservas.innerHTML = '';
+
+    if (historicoReservas.length === 0) {
+        listaReservas.innerHTML = '<div class="mensagem-vazia">Você ainda não possui nenhuma reserva ativa.</div>';
+    } else {
+        historicoReservas.forEach(reserva => {
+            const card = document.createElement('div');
+            card.className = 'cartao-reserva-feita';
+            
+            const dataInFormatada = reserva.checkin ? reserva.checkin.split('-').reverse().join('/') : 'N/A';
+            const dataOutFormatada = reserva.checkout ? reserva.checkout.split('-').reverse().join('/') : 'N/A';
+
+            card.innerHTML = `
+                <div class="info-reserva">
+                    <h3>${reserva.quarto}</h3>
+                    <p><strong>Hóspede:</strong> ${reserva.hospede}</p>
+                    <p><strong>Período:</strong> ${dataInFormatada} a ${dataOutFormatada}</p>
+                    <p><strong>Total:</strong> R$ ${reserva.preco} / noite</p>
+                </div>
+                <div class="status-badge">${reserva.status}</div>
+            `;
+            listaReservas.appendChild(card);
+        });
+    }
+
+    if (secaoMinhasReservas) secaoMinhasReservas.style.display = 'block';
+}
+
+if (btnMinhasReservas) btnMinhasReservas.addEventListener('click', renderizarReservas);
+
+if (btnVoltarHome) {
+    btnVoltarHome.addEventListener('click', () => {
+        if (secaoMinhasReservas) secaoMinhasReservas.style.display = 'none';
+        if (secaoBusca) secaoBusca.style.display = 'block';
+        if (secaoRecomendacoes) secaoRecomendacoes.style.display = 'block';
         
-         window.location.reload(); 
+        if (formularioPesquisa) formularioPesquisa.reset();
+        if (resultadosQuartos) resultadosQuartos.style.display = 'none';
+        if (resumoPreco) resumoPreco.style.display = 'none';
+        if (botaoLimparBusca) botaoLimparBusca.style.display = 'none';
     });
 }

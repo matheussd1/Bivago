@@ -8,11 +8,25 @@
 </head>
 <body>
     <header>
-        <h1>BIVAGO</h1>
+        <div class="header-container">
+            <h1>BIVAGO</h1>
+            <nav>
+                <button id="btn-minhas-reservas" class="botao-nav">Minhas Reservas</button>
+            </nav>
+        </div>
     </header>
 
+    <div id="modal-sucesso" class="modal-overlay" style="display: none;">
+        <div class="modal-conteudo">
+            <div class="icone-sucesso">✔️</div>
+            <h2>Reserva Confirmada!</h2>
+            <p id="mensagem-sucesso">A sua reserva foi concluída com sucesso.</p>
+            <button id="botao-fechar-modal" class="botao-sucesso">Concluir</button>
+        </div>
+    </div>
+
     <main>
-        <section class="container-pesquisa">
+        <section id="secao-busca" class="container-pesquisa">
             <h2>Encontre o quarto perfeito</h2>
             <form id="formulario-pesquisa">
                 <div class="grupo-formulario">
@@ -38,9 +52,9 @@
                     <button type="button" id="botao-limpar-busca" class="botao-limpar" style="display: none;">Voltar para Home</button>
                 </div>
             </form>
+
+            <div id="resumo-preco" class="resumo-preco" style="display: none;"></div>
         </section>
-
-
 
         <section id="recomendacoes" class="container-recomendacoes">
             <h2>Quartos disponíveis</h2>
@@ -53,6 +67,7 @@
                     </div>
                     <h3 class="titulo-quarto">Quarto Standard Charmoso</h3>
                     <p class="preco-recomendacao">R$ 180 / noite</p>
+                    <button class="botao-reserva" style="margin-top: 15px;" onclick="selecionarQuarto(1, 'Quarto Standard Charmoso', 180)">Selecionar Quarto</button>
                 </div>
 
                 <div class="card-recomendacao">
@@ -63,6 +78,7 @@
                     </div>
                     <h3 class="titulo-quarto">Quarto Deluxe King Size</h3>
                     <p class="preco-recomendacao">R$ 350 / noite</p>
+                    <button class="botao-reserva" style="margin-top: 15px;" onclick="selecionarQuarto(2, 'Quarto Deluxe King Size', 350)">Selecionar Quarto</button>
                 </div>
 
                 <div class="card-recomendacao">
@@ -73,23 +89,30 @@
                     </div>
                     <h3 class="titulo-quarto">Suite Luxo com Varanda</h3>
                     <p class="preco-recomendacao">R$ 600 / noite</p>
+                    <button class="botao-reserva" style="margin-top: 15px;" onclick="selecionarQuarto(3, 'Suite Luxo com Varanda', 600)">Selecionar Quarto</button>
                 </div>
             </div>
         </section>
 
-
-
-        <section id="resultados-quartos" class="container-quartos">
-            </section>
-
+        <section id="resultados-quartos" class="container-quartos"></section>
 
         <section id="secao-checkout" class="container-pesquisa checkout-centralizado" style="display: none;">
             <h2>Finalizar Reserva</h2>
             
-            <div id="detalhes-reserva-checkout">
-                </div>
+            <div id="detalhes-reserva-checkout"></div>
 
             <form id="formulario-checkout">
+                <div class="linha-datas">
+                    <div class="grupo-formulario">
+                        <label for="checkout-checkin">Check-in:</label>
+                        <input type="date" id="checkout-checkin" required>
+                    </div>
+                    <div class="grupo-formulario">
+                        <label for="checkout-checkout">Check-out:</label>
+                        <input type="date" id="checkout-checkout" required>
+                    </div>
+                </div>
+
                 <div class="grupo-formulario">
                     <label for="nome-hospede">Nome Completo do Hóspede:</label>
                     <input type="text" id="nome-hospede" required placeholder="Ex: Matheus Dias">
@@ -103,6 +126,13 @@
                 <button type="button" id="botao-voltar" class="botao-secundario">Voltar para a Busca</button>
             </form>
         </section>
+
+        <section id="secao-minhas-reservas" class="container-recomendacoes" style="display: none;">
+            <h2>Minhas Reservas</h2>
+            <div id="lista-reservas"></div>
+            <button type="button" id="botao-voltar-home" class="botao-secundario" style="max-width: 250px; margin-top: 20px;">Voltar para Home</button>
+        </section> 
+
     </main>
 
     <script src="app.js"></script>
