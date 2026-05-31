@@ -32,17 +32,62 @@
                         <option value="suite">Suíte Master</option>
                     </select>
                 </div>
-                <button type="submit" class="botao-buscar">Pesquisar</button>
+                
+                <div class="grupo-botoes-busca">
+                    <button type="submit" class="botao-buscar">Pesquisar</button>
+                    <button type="button" id="botao-limpar-busca" class="botao-limpar" style="display: none;">Voltar para Home</button>
+                </div>
             </form>
         </section>
+
+
+
+        <section id="recomendacoes" class="container-recomendacoes">
+            <h2>Quartos disponíveis</h2>
+            <div class="grid-recomendacoes">
+                <div class="card-recomendacao">
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Rio de Janeiro">
+                    <div class="info-topo">
+                        <span class="local">Rio de Janeiro</span>
+                        <span class="nota">⭐ 4.9</span>
+                    </div>
+                    <h3 class="titulo-quarto">Quarto Standard Charmoso</h3>
+                    <p class="preco-recomendacao">R$ 180 / noite</p>
+                </div>
+
+                <div class="card-recomendacao">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="São Paulo">
+                    <div class="info-topo">
+                        <span class="local">São Paulo</span>
+                        <span class="nota">⭐ 4.8</span>
+                    </div>
+                    <h3 class="titulo-quarto">Quarto Deluxe King Size</h3>
+                    <p class="preco-recomendacao">R$ 350 / noite</p>
+                </div>
+
+                <div class="card-recomendacao">
+                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Florianópolis">
+                    <div class="info-topo">
+                        <span class="local">Florianópolis</span>
+                        <span class="nota">⭐ 5.0</span>
+                    </div>
+                    <h3 class="titulo-quarto">Suite Luxo com Varanda</h3>
+                    <p class="preco-recomendacao">R$ 600 / noite</p>
+                </div>
+            </div>
+        </section>
+
+
 
         <section id="resultados-quartos" class="container-quartos">
             </section>
 
-        <section id="secao-checkout" class="container-pesquisa" style="display: none; margin-top: 40px;">
+
+        <section id="secao-checkout" class="container-pesquisa checkout-centralizado" style="display: none;">
             <h2>Finalizar Reserva</h2>
-            <div id="detalhes-reserva-checkout" style="background-color: #e3f2fd; padding: 15px; border-radius: 6px; margin-bottom: 20px; color: #003580;">
-            </div>
+            
+            <div id="detalhes-reserva-checkout">
+                </div>
 
             <form id="formulario-checkout">
                 <div class="grupo-formulario">
@@ -53,8 +98,9 @@
                     <label for="numero-cartao">Número do Cartão de Crédito:</label>
                     <input type="text" id="numero-cartao" required placeholder="0000 0000 0000 0000" maxlength="19">
                 </div>
-                <button type="submit" class="botao-buscar" style="background-color: #ffb703; color: #003580;">Confirmar Reserva</button>
-                <button type="button" id="botao-voltar" style="background-color: #ccc; color: #333; margin-top: 10px; width: 100%; border: none; padding: 10px; border-radius: 4px; cursor: pointer;">Voltar para a Busca</button>
+                
+                <button type="submit" class="botao-confirmar">Confirmar Reserva</button>
+                <button type="button" id="botao-voltar" class="botao-secundario">Voltar para a Busca</button>
             </form>
         </section>
     </main>

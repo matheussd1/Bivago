@@ -13,10 +13,32 @@ app.get('/api/status', (req, res) => {
 });
 
 // quartos mockados por enquanto
+
 const quartos = [
-  { id: 1, nome: "Quarto Standard Casal", tipo: "standard", preco: 180, imagem: "https://via.placeholder.com/300", descricao: "Ar condicionado, Wi-Fi e TV a cabo." },
-  { id: 2, nome: "Quarto Deluxe Vista Mar", tipo: "deluxe", preco: 350, imagem: "https://via.placeholder.com/300", descricao: "Frigobar, cama king size e varanda." },
-  { id: 3, nome: "Suíte Master Bivago", tipo: "suite", preco: 600, imagem: "https://via.placeholder.com/300", descricao: "Hidromassagem, sala de estar e vista panorâmica." }
+    {
+        id: 1,
+        nome: 'Quarto Standard Charmoso',
+        tipo: 'standard',
+        descricao: 'Ar condicionado, Wi-Fi e TV a cabo. Perfeito para uma estadia prática e confortável.',
+        preco: 180,
+        imagem: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    },
+    {
+        id: 2,
+        nome: 'Quarto Deluxe King Size',
+        tipo: 'deluxe',
+        descricao: 'Cama King Size, frigobar, varanda e decoração premium para máximo conforto.',
+        preco: 350,
+        imagem: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    },
+    {
+        id: 3,
+        nome: 'Suite Luxo com Varanda',
+        tipo: 'suite',
+        descricao: 'Hidromassagem, sala de estar, vista panorâmica e serviço de quarto 24h.',
+        preco: 600,
+        imagem: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+    }
 ];
 
 // rota disponibilidade

@@ -10,6 +10,7 @@ const campoTipoQuarto = document.getElementById('tipo-quarto');
 const containerPesquisa = document.querySelector('.container-pesquisa');
 const campoCartao = document.getElementById('numero-cartao');
 const formularioCheckout = document.getElementById('formulario-checkout');
+const secaoRecomendacoes = document.getElementById('recomendacoes'); // Captura a nova seção de recomendações
 
 // Cria o container para exibir o resumo ou o erro
 const divResumoPreco = document.createElement('div');
@@ -39,8 +40,14 @@ let quartoSelecionadoAtual = null;
 
 // FUNCIONALIDADE 1 - Busca de disponibilidade
 
+
 formularioPesquisa.addEventListener('submit', async (event) => {
     event.preventDefault(); // nao deixa a pagina recarregar
+
+    // ESCONDE AS RECOMENDAÇÕES ASSIM QUE O USUÁRIO PESQUISAR
+    if (secaoRecomendacoes) {
+        secaoRecomendacoes.style.display = 'none';
+    }
 
     const checkin = campoCheckin.value;
     const checkout = campoCheckout.value;
@@ -138,7 +145,7 @@ function calcularDiariasETotal() {
         const valorTotal = quantidadeDiarias * precoPorNoite;
 
         // resumo estilizado
-        divResumoPreco.style.opacity = '1'; // Corrigido de styleOpacity para opacity
+        divResumoPreco.style.opacity = '1'; 
         divResumoPreco.style.display = 'block';
         divResumoPreco.style.backgroundColor = '#e3f2fd';
         divResumoPreco.style.color = '#003580';
@@ -184,6 +191,7 @@ if (botaoVoltar) {
 
 // FUNCIONALIDADE 4 - Máscara Dinâmica de Cartão e Validação
 
+
 if (campoCartao) {
     // Aplica máscara automática adicionando espaço a cada 4 números digitados
     campoCartao.addEventListener('input', (event) => {
@@ -222,5 +230,8 @@ if (formularioCheckout) {
         formularioCheckout.reset();
         divResumoPreco.style.display = 'none'; // Esconde a faixa azul após fechar a reserva
         botaoVoltar.click();
+        
+        
+         window.location.reload(); 
     });
 }
