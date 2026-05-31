@@ -24,18 +24,14 @@ O sistema permite que os usuários pesquisem por data e categoria, realizem a re
 |:---|:---|:---:|:---:|:---:|
 | #1 | Como viajante, desejo **visualizar a lista de hotéis disponíveis** para explorar opções de estadia. | Alta | E1 | 1 |
 | #2 | Como cliente, desejo acessar a **página de detalhes do quarto** para ver fotos, comodidades e descrição antes de reservar. | Alta | E1 | 1 |
-| #3 | Como usuário, desejo **pesquisar por destino e filtrar por categoria** (Praia, Luxo, etc) para encontrar o estilo de viagem ideal. | Média | E2 | 1 |
-| #4 | Como viajante, desejo **selecionar datas de check-in e check-out** para verificar a disponibilidade real dos quartos. | Alta | E2 | 1 |
-| #5 | Como cliente, desejo **selecionar um quarto e revisar o resumo da reserva** para conferir valores e datas antes de pagar. | Alta | E3 | 1 |
-| #6 | Como cliente, desejo **criar uma conta ou fazer login** para salvar minhas preferências e histórico de viagens. | Alta | E4 | 2 |
-| #7 | Como cliente, desejo **informar os dados dos hóspedes** durante a reserva para registro oficial no hotel. | Alta | E5 | 2 |
-| #8 | Como cliente, desejo **finalizar a reserva via integração com sistema de pagamento** para garantir minha vaga com segurança. | Alta | E6 | 2 |
-| #9 | Como usuário, desejo **receber um voucher de confirmação** após o pagamento para comprovar minha reserva. | Alta | E6 | 2 |
-| #10 | Como cliente, desejo **acompanhar o status da minha reserva (Pendente/Confirmada)** em tempo real no meu painel. | Alta | E7 | 3 |
-| #11 | Como administrador, desejo **cadastrar e editar quartos e preços** para manter o inventário do hotel atualizado. | Média | E8 | 3 |
-| #12 | Como administrador, desejo **visualizar o mapa de ocupação** para gerir quais quartos estão reservados em cada data. | Média | E8 | 3 |
-| #13 | Como cliente, desejo **solicitar o cancelamento da reserva** pelo site para facilitar o processo de desistência. | Baixa | E7 | 3 |
-| #14 | Como administrador, desejo **acessar relatórios de ocupação e receita** para acompanhar o desempenho financeiro. | Baixa | E8 | 3 |
+| #3 | Como viajante, desejo **selecionar datas de check-in e check-out** para verificar a disponibilidade real dos quartos. | Alta | E2 | 1 |
+| #4 | Como cliente, desejo **selecionar um quarto e revisar o resumo da reserva** para conferir valores e datas antes de pagar. | Alta | E3 | 1 |
+| #5 | Como cliente, desejo **informar os dados dos hóspedes** durante a reserva para registro oficial no hotel. | Alta | E4 | 2 |
+| #6 | Como cliente, desejo **finalizar a reserva via integração com sistema de pagamento** para garantir minha vaga com segurança. | Alta | E5 | 2 |
+| #7 | Como cliente, desejo **acompanhar o status da minha reserva (Pendente/Confirmada)** em tempo real no meu painel. | Alta | E6 | 3 |
+| #8 | Como administrador, desejo **cadastrar e editar quartos e preços** para manter o inventário do hotel atualizado. | Média | E7 | 3 |
+| #9 | Como cliente, desejo **solicitar o cancelamento da reserva** pelo site para facilitar o processo de desistência. | Baixa | E8 3 |
+
 
 ---
 
@@ -44,23 +40,11 @@ O sistema permite que os usuários pesquisem por data e categoria, realizem a re
 | ID | Épico | Descrição |
 |:---|:---|:---|
 | **E1** | Catálogo de Acomodações | Visualização e detalhes dos quartos disponíveis. |
-| **E2** | Motor de Busca e Filtros | Lógica de busca por destino, datas e categorias visuais. |
+| **E2** | Motor de Busca e Filtros | Lógica de busca por  datas e categorias visuais. |
 | **E3** | Seleção e Pré-Reserva | Fluxo de escolha do quarto e conferência de valores. |
-| **E4** | Autenticação e Perfis | Cadastro e login de hóspedes e administradores. |
-| **E5** | Checkout de Reserva | Coleta de dados dos hóspedes e endereço de cobrança. |
-| **E6** | Integração de Pagamento | Conclusão financeira da reserva e emissão de voucher. |
-| **E7** | Painel do Hóspede | Acompanhamento de status e histórico de estadias. |
-| **E8** | Gestão Administrativa | Controle de inventário, preços e relatórios de vendas. |
-
----
-
-# 🚀 Planejamento de MVP
-
-| Sprint | Épicos Alocados | Foco do MVP |
-| :--- | :--- | :--- |
-| **Sprint 1** | **E1, E2, E3** | **Base de Descoberta:** O foco é permitir que o usuário encontre um hotel. Implementação do catálogo, busca por datas/categorias e a tela de seleção de quarto com resumo de valores. |
-| **Sprint 2** | **E4, E5, E6** | **Fluxo de Reserva:** O foco é a conversão. Implementação do sistema de contas, formulário de checkout de hóspedes e a integração real com o sistema de pagamento para confirmar reservas. |
-| **Sprint 3** | **E7, E8** | **Gestão e Pós-Venda:** O foco é o acompanhamento. Implementação do painel para o hóspede ver o status da reserva e o painel administrativo para o hotel gerir o inventário e preços. |
+| **E4** | Checkout de Reserva | Coleta de dados dos hóspedes e endereço de cobrança. |
+| **E5** | Integração de Pagamento | Conclusão financeira da reserva e emissão de voucher. |
+| **E6** | Painel do Hóspede | Acompanhamento de status e histórico de estadias. |
 
 ---
 
@@ -68,7 +52,7 @@ O sistema permite que os usuários pesquisem por data e categoria, realizem a re
 
 * **Design:** [Figma](https://www.figma.com/) (UI/UX)
 * **Linguagem:** TypeScript
-* **Frontend:** Next.js & Tailwind CSS
+* **Frontend:** Next.js
 * **Backend:** Node.js
 * **Banco de Dados:** PostgreSQL (Consistência de Datas)
 
