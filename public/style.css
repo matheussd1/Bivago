@@ -444,3 +444,19 @@ input, select {
     border-radius: 8px;
     border: 1px dashed #ccc;
 }
+
+.botao-excluir {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.botao-excluir:hover {
+    background-color: #c82333;
+}

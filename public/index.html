@@ -16,12 +16,27 @@
         </div>
     </header>
 
-    <div id="modal-sucesso" class="modal-overlay" style="display: none;">
+    <div id="modal-editar" class="modal-overlay" style="display: none;">
         <div class="modal-conteudo">
-            <div class="icone-sucesso">✔️</div>
-            <h2>Reserva Confirmada!</h2>
-            <p id="mensagem-sucesso">A sua reserva foi concluída com sucesso.</p>
-            <button id="botao-fechar-modal" class="botao-sucesso">Concluir</button>
+            <h2 style="margin-bottom: 20px;">Editar Datas da Reserva</h2>
+            <form id="formulario-editar">
+                <input type="hidden" id="editar-id">
+                
+                <div class="grupo-formulario" style="text-align: left; margin-bottom: 15px;">
+                    <label for="editar-checkin">Novo Check-in:</label>
+                    <input type="date" id="editar-checkin" required style="width: 100%;">
+                </div>
+                
+                <div class="grupo-formulario" style="text-align: left; margin-bottom: 25px;">
+                    <label for="editar-checkout">Novo Check-out:</label>
+                    <input type="date" id="editar-checkout" required style="width: 100%;">
+                </div>
+                
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="botao-sucesso" style="flex: 1; padding: 10px;">Salvar</button>
+                    <button type="button" id="botao-cancelar-edicao" class="botao-secundario" style="flex: 1; margin: 0; padding: 10px;">Cancelar</button>
+                </div>
+            </form>
         </div>
     </div>
 
