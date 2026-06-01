@@ -13,7 +13,7 @@ O sistema permite que os usuários pesquisem por data e categoria, realizem a re
 ---
 
 ## Versão final do projeto
-**👉 [Acesse Aqui](https://matheussd1.github.io/Bivago/) **
+👉 **[Acesse Aqui](https://matheussd1.github.io/Bivago/)**
 
 Banco de Dados só roda localmente, porém o front-end continua funcional.
 O projeto é um Trabalho de faculdade sem intenções profissionais, apenas para estudos
