@@ -1,60 +1,55 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
+import mysql from 'mysql2/promise';
 import cors from 'cors';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
-
 app.use(cors());
 app.use(express.json());
 
-// rota teste inicial
-app.get('/api/status', (req, res) => {
-  res.json({ message: "API do Bivago Hotel rodando com sucesso!" });
+const dbConfig = {
+    host: 'localhost',
+    user: 'root',
+    password: '12345',
+    database: 'bivago_db'
+};
+
+// GET: Listar reservas
+app.get('/api/reservas', async (req: Request, res: Response) => {
+    const conexao = await mysql.createConnection(dbConfig);
+    const [linhas] = await conexao.execute('SELECT * FROM reservas');
+    conexao.end();
+    res.json(linhas);
 });
 
-// quartos mockados por enquanto
-
-const quartos = [
-    {
-        id: 1,
-        nome: 'Quarto Standard Charmoso',
-        tipo: 'standard',
-        descricao: 'Ar condicionado, Wi-Fi e TV a cabo. Perfeito para uma estadia prática e confortável.',
-        preco: 180,
-        imagem: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-    },
-    {
-        id: 2,
-        nome: 'Quarto Deluxe King Size',
-        tipo: 'deluxe',
-        descricao: 'Cama King Size, frigobar, varanda e decoração premium para máximo conforto.',
-        preco: 350,
-        imagem: 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-    },
-    {
-        id: 3,
-        nome: 'Suite Luxo com Varanda',
-        tipo: 'suite',
-        descricao: 'Hidromassagem, sala de estar, vista panorâmica e serviço de quarto 24h.',
-        preco: 600,
-        imagem: 'https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
-    }
-];
-
-// rota disponibilidade
-app.get('/api/quartos/buscar', (req, res) => {
-  const { checkin, checkout, tipo } = req.query;
-
-  // filtra pelo tipo de quarto
-  const quartosDisponiveis = quartos.filter(quarto => quarto.tipo === tipo);
-
-  // retorna os quartos encontradps
-  res.json({
-    periodo: { checkin, checkout },
-    quartos: quartosDisponiveis
-  });
+// POST: Criar reserva
+app.post('/api/reservas', async (req: Request, res: Response) => {
+    const { quarto, preco, hospede, checkin, checkout } = req.body;
+    const conexao = await mysql.createConnection(dbConfig);
+    await conexao.execute(
+        'INSERT INTO reservas (quarto, preco, hospede, checkin, checkout) VALUES (?, ?, ?, ?, ?)',
+        [quarto, preco, hospede, checkin, checkout]
+    );
+    conexao.end();
+    res.status(201).json({ mensagem: 'Reserva criada!' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+// PUT: Atualizar reserva
+app.put('/api/reservas/:id', async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { checkin, checkout } = req.body;
+    const conexao = await mysql.createConnection(dbConfig);
+    await conexao.execute('UPDATE reservas SET checkin = ?, checkout = ? WHERE id = ?', [checkin, checkout, id]);
+    conexao.end();
+    res.json({ mensagem: 'Reserva atualizada!' });
 });
+
+// DELETE: Deletar reserva
+app.delete('/api/reservas/:id', async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const conexao = await mysql.createConnection(dbConfig);
+    await conexao.execute('DELETE FROM reservas WHERE id = ?', [id]);
+    conexao.end();
+    res.json({ mensagem: 'Reserva deletada!' });
+});
+
+app.listen(3000, () => console.log('Servidor rodando na porta 3000'));

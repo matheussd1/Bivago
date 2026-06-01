@@ -98,7 +98,7 @@ if (formularioPesquisa) {
                 const preco = quartosFiltrados[0].preco;
                 const total = preco * diarias;
                 if (resumoPreco) {
-                    resumoPreco.innerHTML = `✨ <strong>Período Selecionado:</strong> ${diarias} diária(s) &nbsp;|&nbsp; <strong>Valor por noite:</strong> R$ ${preco} &nbsp;|&nbsp; <strong>Total Estimado: R$ ${total}</strong>`;
+                    resumoPreco.innerHTML = ` <strong>Período Selecionado:</strong> ${diarias} diária(s) &nbsp;|&nbsp; <strong>Valor por noite:</strong> R$ ${preco} &nbsp;|&nbsp; <strong>Total Estimado: R$ ${total}</strong>`;
                     resumoPreco.style.display = 'block';
                 }
             }
@@ -189,28 +189,41 @@ if (botaoVoltar) {
 const formCheckout = document.getElementById('formulario-checkout');
 
 if (formCheckout) {
-    formCheckout.addEventListener('submit', (e) => {
+    formCheckout.addEventListener('submit', async (e) => {
         e.preventDefault(); 
         
-        const dataIn = document.getElementById('checkout-checkin').value;
-        const dataOut = document.getElementById('checkout-checkout').value;
-        const hospede = document.getElementById('nome-hospede').value;
-
-        historicoReservas.push({
+        // Captura os dados do formulário
+        const reservaDados = {
             quarto: quartoSelecionadoAtual.nome,
             preco: quartoSelecionadoAtual.preco,
-            hospede: hospede,
-            checkin: dataIn,
-            checkout: dataOut,
-            status: 'Confirmada ✔️'
-        });
+            hospede: document.getElementById('nome-hospede').value,
+            checkin: document.getElementById('checkout-checkin').value,
+            checkout: document.getElementById('checkout-checkout').value
+        };
 
-        if (mensagemSucesso && modalSucesso) {
-            mensagemSucesso.innerHTML = `A sua reserva para o <strong>${quartoSelecionadoAtual?.nome}</strong> foi realizada com sucesso!<br><br><span style="font-size: 0.85em; color: #888;">(Este é um sistema simulado)</span>`;
-            modalSucesso.style.display = 'flex'; 
+        // Envia para o seu servidor (que está rodando na porta 3000)
+        try {
+            const resposta = await fetch('http://localhost:3000/api/reservas', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reservaDados)
+            });
+
+            if (resposta.ok) {
+                // Se o servidor respondeu com sucesso
+                if (mensagemSucesso && modalSucesso) {
+                    mensagemSucesso.innerHTML = `Reserva confirmada no MySQL!`;
+                    modalSucesso.style.display = 'flex'; 
+                }
+            }
+        } catch (erro) {
+            console.error("Erro na conexão:", erro);
+            alert("Erro ao conectar com o servidor. Verifique se o 'npm run dev' ainda está ligado!");
         }
     });
 }
+
+// Nota: mensagem de sucesso já é tratada após resposta do servidor no formulário de checkout.
 
 // Fechar o Modal
 if (botaoFecharModal) {
@@ -224,53 +237,76 @@ if (botaoFecharModal) {
 }
 
 // ==========================================
-// 8. PAINEL MINHAS RESERVAS
+// 8. PAINEL MINHAS RESERVAS (BUSCANDO DO MYSQL)
 // ==========================================
-function renderizarReservas() {
+async function renderizarReservas() {
+    // Esconde outras telas
     if (secaoBusca) secaoBusca.style.display = 'none';
     if (resultadosQuartos) resultadosQuartos.style.display = 'none';
     if (secaoRecomendacoes) secaoRecomendacoes.style.display = 'none';
     if (secaoCheckout) secaoCheckout.style.display = 'none';
 
-    listaReservas.innerHTML = '';
+    listaReservas.innerHTML = 'Carregando reservas do banco...';
 
-    if (historicoReservas.length === 0) {
-        listaReservas.innerHTML = '<div class="mensagem-vazia">Você ainda não possui nenhuma reserva ativa.</div>';
-    } else {
-        historicoReservas.forEach(reserva => {
-            const card = document.createElement('div');
-            card.className = 'cartao-reserva-feita';
-            
-            const dataInFormatada = reserva.checkin ? reserva.checkin.split('-').reverse().join('/') : 'N/A';
-            const dataOutFormatada = reserva.checkout ? reserva.checkout.split('-').reverse().join('/') : 'N/A';
+    try {
+        // Busca os dados reais do seu servidor Node.js
+        const resposta = await fetch('http://localhost:3000/api/reservas');
+        const reservasDoBanco = await resposta.json();
 
-            card.innerHTML = `
-                <div class="info-reserva">
-                    <h3>${reserva.quarto}</h3>
-                    <p><strong>Hóspede:</strong> ${reserva.hospede}</p>
-                    <p><strong>Período:</strong> ${dataInFormatada} a ${dataOutFormatada}</p>
-                    <p><strong>Total:</strong> R$ ${reserva.preco} / noite</p>
-                </div>
-                <div class="status-badge">${reserva.status}</div>
-            `;
-            listaReservas.appendChild(card);
-        });
+        listaReservas.innerHTML = '';
+
+        if (reservasDoBanco.length === 0) {
+            listaReservas.innerHTML = '<div class="mensagem-vazia">Nenhuma reserva encontrada no banco de dados.</div>';
+        } else {
+            reservasDoBanco.forEach(reserva => {
+                const card = document.createElement('div');
+                card.className = 'cartao-reserva-feita';
+                
+                // Formatação simples de data (MySQL retorna string ISO)
+                const dataIn = reserva.checkin ? reserva.checkin.split('T')[0] : 'N/A';
+                const dataOut = reserva.checkout ? reserva.checkout.split('T')[0] : 'N/A';
+
+                card.innerHTML = `
+                    <div class="info-reserva">
+                        <h3>${reserva.quarto}</h3>
+                        <p><strong>Hóspede:</strong> ${reserva.hospede}</p>
+                        <p><strong>Período:</strong> ${dataIn} a ${dataOut}</p>
+                        <p><strong>Total:</strong> R$ ${reserva.preco}</p>
+                    </div>
+                    <div class="status-badge">${reserva.status || 'Confirmada ✔️'}</div>
+                `;
+                listaReservas.appendChild(card);
+            });
+        }
+    } catch (erro) {
+        listaReservas.innerHTML = '<div class="mensagem-vazia">Erro ao conectar com o banco de dados. Verifique se o servidor está rodando.</div>';
     }
 
     if (secaoMinhasReservas) secaoMinhasReservas.style.display = 'block';
 }
 
-if (btnMinhasReservas) btnMinhasReservas.addEventListener('click', renderizarReservas);
+// FORÇAR VÍNCULO DO BOTÃO
+window.onload = () => {
+    const btn = document.getElementById('btn-minhas-reservas');
+    if (btn) {
+        btn.addEventListener('click', () => {
+            console.log("Evento disparado!");
+            renderizarReservas();
+        });
+        console.log("Evento vinculado com sucesso!");
+    } else {
+        console.error("ID 'btn-minhas-reservas' não foi achado no HTML.");
+    }
 
-if (btnVoltarHome) {
-    btnVoltarHome.addEventListener('click', () => {
-        if (secaoMinhasReservas) secaoMinhasReservas.style.display = 'none';
-        if (secaoBusca) secaoBusca.style.display = 'block';
-        if (secaoRecomendacoes) secaoRecomendacoes.style.display = 'block';
-        
-        if (formularioPesquisa) formularioPesquisa.reset();
-        if (resultadosQuartos) resultadosQuartos.style.display = 'none';
-        if (resumoPreco) resumoPreco.style.display = 'none';
-        if (botaoLimparBusca) botaoLimparBusca.style.display = 'none';
-    });
-}
+    // ==========================================
+    // BOTÃO VOLTAR PARA HOME
+    // ==========================================
+    const btnVoltar = document.getElementById('botao-voltar-home');
+    
+    if (btnVoltar) {
+        btnVoltar.addEventListener('click', () => {
+            // Recarrega a página inteira. É a forma mais limpa de voltar para a Home!
+            window.location.reload();
+        });
+    }
+};
