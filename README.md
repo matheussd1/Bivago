@@ -12,6 +12,14 @@ O sistema permite que os usuários pesquisem por data e categoria, realizem a re
 
 ---
 
+## Versão final do projeto
+**  [Acesse Aqui](https://matheussd1.github.io/Bivago/)
+
+Banco de Dados só roda localmente, porém o front-end continua funcional.
+Projeto é um Trabalho de faculdade sem intenções profissionais, apenas para estudos
+
+---
+
 ## 🎨 Protótipo do Produto
 
 👉 **[Acesse o Protótipo no Figma](https://www.figma.com/make/QNlXxUrFkQ3J4wECrnEOBE/Hotel-Booking-UI-Design?t=uptLVSA6SxzLHXM3-1)**
@@ -54,7 +62,7 @@ O sistema permite que os usuários pesquisem por data e categoria, realizem a re
 * **Linguagem:** TypeScript
 * **Frontend:** Next.js
 * **Backend:** Node.js
-* **Banco de Dados:** PostgreSQL (Consistência de Datas)
+* **Banco de Dados:** MySQL
 
 ---
 
