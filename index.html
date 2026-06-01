@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bivago - Reservas de Hotel</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <h1>BIVAGO</h1>
+            <nav>
+                <button id="btn-minhas-reservas" class="botao-nav">Minhas Reservas</button>
+            </nav>
+        </div>
+    </header>
+
+    <div id="modal-sucesso" class="modal-overlay" style="display: none;">
+        <div class="modal-conteudo">
+            <div class="icone-sucesso">✔️</div>
+            <h2>Reserva Confirmada!</h2>
+            <p id="mensagem-sucesso">A sua reserva foi concluída com sucesso.</p>
+            <button id="botao-fechar-modal" class="botao-sucesso">Concluir</button>
+        </div>
+    </div>
+
+    <main>
+        <section id="secao-busca" class="container-pesquisa">
+            <h2>Encontre o quarto perfeito</h2>
+            <form id="formulario-pesquisa">
+                <div class="grupo-formulario">
+                    <label for="checkin">Check-in:</label>
+                    <input type="date" id="checkin" required>
+                </div>
+                <div class="grupo-formulario">
+                    <label for="checkout">Check-out:</label>
+                    <input type="date" id="checkout" required>
+                </div>
+                <div class="grupo-formulario">
+                    <label for="tipo-quarto">Tipo de Quarto:</label>
+                    <select id="tipo-quarto" required>
+                        <option value="" disabled selected>Selecione um tipo...</option>
+                        <option value="standard">Standard</option>
+                        <option value="deluxe">Deluxe</option>
+                        <option value="suite">Suíte Master</option>
+                    </select>
+                </div>
+                
+                <div class="grupo-botoes-busca">
+                    <button type="submit" class="botao-buscar">Pesquisar</button>
+                    <button type="button" id="botao-limpar-busca" class="botao-limpar" style="display: none;">Voltar para Home</button>
+                </div>
+            </form>
+
+            <div id="resumo-preco" class="resumo-preco" style="display: none;"></div>
+        </section>
+
+        <section id="recomendacoes" class="container-recomendacoes">
+            <h2>Quartos disponíveis</h2>
+            <div class="grid-recomendacoes">
+                <div class="card-recomendacao">
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Rio de Janeiro">
+                    <div class="info-topo">
+                        <span class="local">Rio de Janeiro</span>
+                        <span class="nota">⭐ 4.9</span>
+                    </div>
+                    <h3 class="titulo-quarto">Quarto Standard Charmoso</h3>
+                    <p class="preco-recomendacao">R$ 180 / noite</p>
+                    <button class="botao-reserva" style="margin-top: 15px;" onclick="selecionarQuarto(1, 'Quarto Standard Charmoso', 180)">Selecionar Quarto</button>
+                </div>
+
+                <div class="card-recomendacao">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="São Paulo">
+                    <div class="info-topo">
+                        <span class="local">São Paulo</span>
+                        <span class="nota">⭐ 4.8</span>
+                    </div>
+                    <h3 class="titulo-quarto">Quarto Deluxe King Size</h3>
+                    <p class="preco-recomendacao">R$ 350 / noite</p>
+                    <button class="botao-reserva" style="margin-top: 15px;" onclick="selecionarQuarto(2, 'Quarto Deluxe King Size', 350)">Selecionar Quarto</button>
+                </div>
+
+                <div class="card-recomendacao">
+                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Florianópolis">
+                    <div class="info-topo">
+                        <span class="local">Florianópolis</span>
+                        <span class="nota">⭐ 5.0</span>
+                    </div>
+                    <h3 class="titulo-quarto">Suite Luxo com Varanda</h3>
+                    <p class="preco-recomendacao">R$ 600 / noite</p>
+                    <button class="botao-reserva" style="margin-top: 15px;" onclick="selecionarQuarto(3, 'Suite Luxo com Varanda', 600)">Selecionar Quarto</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="resultados-quartos" class="container-quartos"></section>
+
+        <section id="secao-checkout" class="container-pesquisa checkout-centralizado" style="display: none;">
+            <h2>Finalizar Reserva</h2>
+            
+            <div id="detalhes-reserva-checkout"></div>
+
+            <form id="formulario-checkout">
+                <div class="linha-datas">
+                    <div class="grupo-formulario">
+                        <label for="checkout-checkin">Check-in:</label>
+                        <input type="date" id="checkout-checkin" required>
+                    </div>
+                    <div class="grupo-formulario">
+                        <label for="checkout-checkout">Check-out:</label>
+                        <input type="date" id="checkout-checkout" required>
+                    </div>
+                </div>
+
+                <div class="grupo-formulario">
+                    <label for="nome-hospede">Nome Completo do Hóspede:</label>
+                    <input type="text" id="nome-hospede" required placeholder="Ex: Matheus Dias">
+                </div>
+                <div class="grupo-formulario">
+                    <label for="numero-cartao">Número do Cartão de Crédito:</label>
+                    <input type="text" id="numero-cartao" required placeholder="0000 0000 0000 0000" maxlength="19">
+                </div>
+                
+                <button type="submit" class="botao-confirmar">Confirmar Reserva</button>
+                <button type="button" id="botao-voltar" class="botao-secundario">Voltar para a Busca</button>
+            </form>
+        </section>
+
+        <section id="secao-minhas-reservas" class="container-recomendacoes" style="display: none;">
+            <h2>Minhas Reservas</h2>
+            <div id="lista-reservas"></div>
+            <button type="button" id="botao-voltar-home" class="botao-secundario" style="max-width: 250px; margin-top: 20px;">Voltar para Home</button>
+        </section> 
+
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
